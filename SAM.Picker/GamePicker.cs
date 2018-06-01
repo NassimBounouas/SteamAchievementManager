@@ -389,7 +389,26 @@ namespace SAM.Picker
 
             try
             {
-                Process.Start("SAM.Game.exe", info.Id.ToString(CultureInfo.InvariantCulture));
+                var proc = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "SAM.Game.exe",
+                        Arguments = info.Id.ToString(CultureInfo.InvariantCulture),
+                        UseShellExecute = false,
+                        RedirectStandardOutput = true,
+                        CreateNoWindow = true
+                    }
+                };
+
+                proc.Start();
+                while (!proc.StandardOutput.EndOfStream)
+                {
+                    string line = proc.StandardOutput.ReadLine();
+                    // do something with line
+                    System.Diagnostics.Debug.Print(line);
+                }
+                //Process.Start("SAM.Game.exe", info.Id.ToString(CultureInfo.InvariantCulture));
             }
             catch (Win32Exception)
             {
